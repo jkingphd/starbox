@@ -1,13 +1,15 @@
 module poly(n_sides, r, l, height) {
+    r = r - l;
     theta = 360/n_sides;
-    echo(theta);
+    //echo(theta);
     pts_1 = [for (i = [0:theta:360]) [r*sin(i),r*cos(i)]];
     echo(pts_1);
     
     h = r*cos(theta/2);
     s = r*sin(theta/2);
+    echo(h);
     
-    pts_2 = [[-s,0],[0,l],[s,0]];
+    pts_2 = [[-s,0],[0,l+(r-h)],[s,0]];
     echo(pts_2);
     
     linear_extrude(height)
@@ -25,7 +27,7 @@ module poly(n_sides, r, l, height) {
 }
 
 n_sides = 5;
-radius = 30;
+radius = 50.8;
 arm_length = 25.4;
 height = 5;
 
