@@ -1,33 +1,32 @@
-module poly(r, n, l) {
-    theta = 360/n;
+module poly(n_sides, r, l, height) {
+    theta = 360/n_sides;
     echo(theta);
-    points = [for (i = [0:theta:360]) [r*sin(i),r*cos(i)]];
-    echo(points);
+    pts_1 = [for (i = [0:theta:360]) [r*sin(i),r*cos(i)]];
+    echo(pts_1);
     
     h = r*cos(theta/2);
     s = r*sin(theta/2);
     
-    pts2 = [[-s,0],[0,l],[s,0]];
-    echo(pts2);
+    pts_2 = [[-s,0],[0,l],[s,0]];
+    echo(pts_2);
     
+    linear_extrude(height)
     union() {
-    translate([0,h,0])
-    polygon(pts2);
-        
-    rotate([0,0,-theta/2])
-    polygon(points);
-    }
+        for (i = [0:360/n_sides:360]) 
+            rotate(i)
+            union() {
+                rotate([0,0,-theta/2])
+                polygon(pts_1);
+                
+                translate([0,h,0])
+                polygon(pts_2);
+            }
+        }
 }
 
-
-//poly(25.4, 5);
-//rotate(-360/5)
-//poly(25.4, 5);
-
-sides = 5;
+n_sides = 5;
+radius = 30;
 arm_length = 25.4;
+height = 5;
 
-linear_extrude(5)
-union() {
-for (i = [0:360/sides:360]) rotate(i) poly(25.4, sides, arm_length);
-}
+poly(n_sides, radius, arm_length, height);
