@@ -1,4 +1,4 @@
-module poly(n_sides, r, l, height) {
+module poly(n_sides, r, l, rnd = 0) {
     r = r - l;
     theta = 360/n_sides;
     //echo(theta);
@@ -12,23 +12,45 @@ module poly(n_sides, r, l, height) {
     pts_2 = [[-s,0],[0,l+(r-h)],[s,0]];
     echo(pts_2);
     
-    linear_extrude(height)
-    union() {
-        for (i = [0:360/n_sides:360]) 
-            rotate(i)
-            union() {
-                rotate([0,0,-theta/2])
-                polygon(pts_1);
-                
-                translate([0,h,0])
-                polygon(pts_2);
-            }
+    if (rnd == 0) {
+        union() {
+            for (i = [0:360/n_sides:360]) 
+                rotate(i)
+                union() {
+                    rotate([0,0,-theta/2])
+                    polygon(pts_1);
+                    
+                    translate([0,h,0])
+                    polygon(pts_2);
+                }
         }
+    }
+    else {
+        minkowski(){
+            union() {
+                for (i = [0:360/n_sides:360]) 
+                    rotate(i)
+                    union() {
+                        rotate([0,0,-theta/2])
+                        polygon(pts_1);
+                        
+                        translate([0,h,0])
+                        polygon(pts_2);
+                    }
+            }
+            circle(rnd, $fn = 32);
+        }
+    }
 }
 
-n_sides = 5;
-radius = 50.8;
-arm_length = 25.4;
-height = 5;
-
-poly(n_sides, radius, arm_length, height);
+// Build the box
+union() {
+    linear_extrude(25.4)
+    difference() {
+        poly(5, 50.8, 25.4, 1);
+        offset(-2)
+        poly(5, 50.8, 25.4, 1);
+    }
+    linear_extrude(2)
+    poly(5, 50.8, 25.4, 1);
+}
