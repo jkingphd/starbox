@@ -43,36 +43,37 @@ module poly(n_sides, r, l, rnd = 0) {
     }
 }
 
-n = 5; // Number of sides
-r = 50; // Radius of the box in mm
-l = 25; // Length of each arm in mm
-h = 30; // Height of the box
-w = 2; // Wall thickness in mm
-r_f = 1; // Roundness factor
+n = 7; // Number of sides
+r = 30; // Radius of the box in mm
+l = 10; // Length of each arm in mm
+h = 15; // Height of the box
+w = 1.2; // Wall thickness in mm
+b_l = 1; // Thickness of bottom wall in mm
+r_f = 2; // Roundness factor
 
 // Build the box
-translate([-1.5*r,0,0])
+//translate([-1.5*r,0,0])
 union() {
-    linear_extrude(8*h/10)
+    linear_extrude((8*h/10) - b_l)
     difference() {
         poly(n, r, l, r_f);
         offset(-w)
         poly(n, r, l, r_f);
     }
-    linear_extrude(h/10)
+    linear_extrude(b_l)
     poly(n, r, l, r_f);
 }
 
-// Build the lid
-translate([1.5*r,0,0])
-union() {
-    linear_extrude(2*h/10)
-    difference() {
-        offset(-w)
-        poly(n, r, l, r_f);
-        offset(-2*w)
-        poly(n, r, l, r_f);
-    }
-    linear_extrude(h/10)
-    poly(n, r, l, r_f);
-}
+//// Build the lid
+////translate([1.5*r,0,0])
+//union() {
+//    linear_extrude(2*h/10)
+//    difference() {
+//        offset(-w)
+//        poly(n, r, l, r_f);
+//        offset(-2*w)
+//        poly(n, r, l, r_f);
+//    }
+//    linear_extrude(h/10)
+//    poly(n, r, l, r_f);
+//}
